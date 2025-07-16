@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from chapel_agent import get_agent_response  # your logic
+from assistant import get_agent_response  # your logic
 
 app = Flask(__name__)
 CORS(app)  # allow cross-origin calls from React
