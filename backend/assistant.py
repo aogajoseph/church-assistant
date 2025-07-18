@@ -18,14 +18,17 @@ faq_items = load_faq()
 
 # === Build a normalized flat map: question/variant → answer ===
 flat_faq_map = {}
-for item in faq_items:
-    question = item["question"]
-    answer = item["answer"]
-    variants = item.get("variants", [])
+
+for question, content in faq_items.items():
+    answer = content["answer"]
+    variants = content.get("variants", [])
     all_phrasings = [question] + variants
     for phrase in all_phrasings:
         norm = re.sub(r"[^\w\s]", "", phrase.lower().strip())
         flat_faq_map[norm] = answer
+
+print("FAQ loaded keys:", list(flat_faq_map.keys()))
+
 
 # === Core response handler ===
 def normalize(text):
@@ -47,7 +50,7 @@ def get_agent_response(user_input):
     with open("unmatched_questions.log", "a", encoding="utf-8") as f:
         f.write(user_input + "\n")
 
-    # 4. Optional fallback to GPT (commented out for now)
+    # 4. Optional fallback to GPT (commented out)
     # try:
     #     response = client.chat.completions.create(
     #         model="gpt-3.5-turbo",
@@ -61,7 +64,7 @@ def get_agent_response(user_input):
     #     return f"Sorry, something went wrong while using the assistant: {str(e)}"
 
     # 5. Static fallback
-    return "I'm not sure how to answer that yet. Please try rephrasing or check back soon."
+    return "I'm not sure how to answer that yet because I'm still learning. Please try rephrasing or check back soon."
 
 # === For CLI testing only ===
 if __name__ == "__main__":
